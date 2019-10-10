@@ -8,5 +8,4 @@ public struct PlayerInput : IComponentData
 {
     public BlittableBool LeftClick;
     public BlittableBool RightClick;
-    public float3 MousePosition;
 }
