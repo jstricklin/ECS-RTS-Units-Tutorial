@@ -22,8 +22,8 @@ public class DeselectSystem : ComponentSystem
                 var parent = EntityManager.GetComponentData<Parent>(highlight).Value;
                 if (EntityManager.HasComponent<Deselecting>(parent))
                 {
-                    EntityManager.RemoveComponent<Deselecting>(parent);
-                    EntityManager.DestroyEntity(highlight);
+                    PostUpdateCommands.RemoveComponent<Deselecting>(parent);
+                    PostUpdateCommands.DestroyEntity(highlight);
                 }
             }
         }

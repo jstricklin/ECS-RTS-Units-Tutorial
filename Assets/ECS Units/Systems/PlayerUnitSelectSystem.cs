@@ -23,7 +23,7 @@ public class PlayerUnitSelectSystem : JobComponentSystem
     struct PlayerUnitSelectJob : IJobForEachWithEntity<PlayerInput>
     {
         [ReadOnly]
-        public EntityCommandBuffer CommandBuffer;
+        public EntityCommandBuffer.Concurrent CommandBuffer;
         [ReadOnly]
         public ComponentDataFromEntity<PlayerUnitSelect> Selected;
         [ReadOnly]
@@ -44,13 +44,13 @@ public class PlayerUnitSelectSystem : JobComponentSystem
                 
                 if (Selected.Exists(entity))
                 {
-                    CommandBuffer.RemoveComponent<PlayerUnitSelect>(entity);
-                    CommandBuffer.AddComponent(entity, new Deselecting());
+                    CommandBuffer.RemoveComponent<PlayerUnitSelect>(index, entity);
+                    CommandBuffer.AddComponent(index, entity, new Deselecting());
                 } 
                 if (hit) {
                     Entity e = physicsWorld.Bodies[hitData.RigidBodyIndex].Entity;
-                    CommandBuffer.AddComponent(e, new PlayerUnitSelect());
-                    CommandBuffer.AddComponent(e, new Selecting());
+                    CommandBuffer.AddComponent(index, e, new PlayerUnitSelect());
+                    CommandBuffer.AddComponent(index, e, new Selecting());
                 }
             }
             
@@ -70,7 +70,7 @@ public class PlayerUnitSelectSystem : JobComponentSystem
             };
         var job = new PlayerUnitSelectJob 
         {
-            CommandBuffer = m_EntityCommandBufferSystem.CreateCommandBuffer(),
+            CommandBuffer = m_EntityCommandBufferSystem.CreateCommandBuffer().ToConcurrent(),
             Selected = GetComponentDataFromEntity<PlayerUnitSelect>(),
             physicsWorld = m_BuildPhysicsWorldSystem.PhysicsWorld,
             raycastInput = _raycastInput,

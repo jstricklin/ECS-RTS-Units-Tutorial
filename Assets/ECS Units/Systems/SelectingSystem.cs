@@ -27,7 +27,7 @@ public class SelectingSystem : ComponentSystem
             foreach(var selectedUnit in selectedUnits)
             {
                 // remove component from unit so system doesnt constantly run
-                EntityManager.RemoveComponent<Selecting>(selectedUnit);
+                PostUpdateCommands.RemoveComponent<Selecting>(selectedUnit);
 
                 //get prefab from spawner and set translation to get a LocalWorld
                 var entity = EntityManager.Instantiate(prefab);
